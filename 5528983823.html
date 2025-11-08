@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hussen Aba - الموقع التعريفي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* متغيرات الألوان للوضع النهاري */
+            --bg-color: #f5f5f5;
+            --text-color: #333;
+            --primary-color: #4a6cf7;
+            --secondary-color: #6c757d;
+            --accent-color: #ff6b6b;
+            --card-bg: #ffffff;
+            --border-color: #e0e0e0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --menu-active: #4a6cf7;
+            --skill-bar-bg: #e0e0e0;
+            --sidebar-bg: #ffffff;
+            --sidebar-width: 250px;
+        }
+
+        /* متغيرات الألوان للوضع الليلي */
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #f5f5f5;
+            --primary-color: #6d8dff;
+            --secondary-color: #a0a0a0;
+            --accent-color: #ff8585;
+            --card-bg: #1e1e1e;
+            --border-color: #333;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --menu-active: #6d8dff;
+            --skill-bar-bg: #333;
+            --sidebar-bg: #1e1e1e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* تنسيق القائمة الجانبية */
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            box-shadow: 0 0 15px var(--shadow-color);
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 45px;
+            height: 45px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .sidebar-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .menu li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .menu li a i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu li a:hover, .menu li a.active {
+            color: var(--menu-active);
+            background-color: rgba(74, 108, 247, 0.1);
+            transform: translateX(5px);
+        }
+
+        /* تنسيق زر تبديل الوضع */
+        .theme-toggle {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background-color: rgba(74, 108, 247, 0.05);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        .fa-sun {
+            color: #f9d71c;
+        }
+
+        .fa-moon {
+            color: #5c6bc0;
+        }
+
+        /* تنسيق القسم الرئيسي */
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* تنسيق قسم الملف الشخصي */
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            margin-top: 2rem;
+        }
+
+        .profile-image-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--primary-color);
+            box-shadow: 0 10px 20px var(--shadow-color);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background-color: #000;
+            border-radius: 50%;
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .title {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* تنسيق أيقونات التواصل الاجتماعي */
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            text-decoration: none;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px);
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* تنسيق العناوين */
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background-color: var(--primary-color);
+            bottom: -10px;
+            right: 0;
+        }
+
+        /* تنسيق قسم من أنا */
+        .about-content {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            margin-bottom: 3rem;
+        }
+
+        .about-content p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* تنسيق قسم المهارات */
+        .skills-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .skill {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .skill-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-bar {
+            height: 10px;
+            background-color: var(--skill-bar-bg);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .skill-level {
+            height: 100%;
+            background-color: var(--primary-color);
+            border-radius: 5px;
+        }
+
+        /* تنسيق قسم المشاريع */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .project-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px var(--shadow-color);
+        }
+
+        .project-image {
+            height: 200px;
+            background-color: var(--primary-color);
+            background-image: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+        }
+
+        .project-card h3 {
+            padding: 1.5rem 1.5rem 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .project-card p {
+            padding: 0 1.5rem 1.5rem;
+            color: var(--secondary-color);
+        }
+
+        /* تنسيق قسم التواصل */
+        .contact-form {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            margin-bottom: 3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 108, 247, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #3a57d0;
+            transform: translateY(-2px);
+        }
+
+        /* تصميم متجاوب */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+            }
+            
+            .profile {
+                flex-direction: column;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* تأثير الخلفية المظللة عند فتح القائمة الجانبية */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- زر فتح/إغلاق القائمة الجانبية -->
+        <div class="sidebar-toggle" id="sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <!-- الخلفية المظللة -->
+        <div class="overlay" id="overlay"></div>
+
+        <!-- القائمة الجانبية -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">Hussen Aba</div>
+            </div>
+            <ul class="menu">
+                <li><a href="#home" class="active"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="#about"><i class="fas fa-user"></i> من أنا</a></li>
+                <li><a href="#skills"><i class="fas fa-code"></i> المهارات</a></li>
+                <li><a href="#projects"><i class="fas fa-project-diagram"></i> المشاريع</a></li>
+                <li><a href="#contact"><i class="fas fa-envelope"></i> تواصل معي</a></li>
+            </ul>
+            <div class="theme-toggle">
+                <i class="fas fa-sun"></i>
+                <label class="switch">
+                    <input type="checkbox" id="theme-switch">
+                    <span class="slider round"></span>
+                </label>
+                <i class="fas fa-moon"></i>
+            </div>
+        </nav>
+
+        <!-- القسم الرئيسي -->
+        <main>
+            <!-- قسم الرئيسية -->
+            <section id="home" class="section active">
+                <div class="profile">
+                    <div class="profile-image-container">
+                        <img src="https://i.imgur.com/nE5NtKy.jpeg" alt="Hussen Aba" class="profile-image">
+                    </div>
+                    <div class="profile-info">
+                        <h1 class="name">Hussen Aba<span class="verified-badge"><i class="fas fa-check"></i></span></h1>
+                        <p class="title">ic_1t</p>
+                        <div class="social-icons">
+                            <a href="https://t.me/G" class="social-icon" target="_blank"><i class="fab fa-telegram"></i></a>
+                            <a href="#" class="social-icon" target="_blank"><i class="fab fa-facebook"></i></a>
+                            <a href="#" class="social-icon" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-icon" target="_blank"><i class="fab fa-pinterest"></i></a>
+                            <a href="#" class="social-icon" target="_blank"><i class="fab fa-tiktok"></i></a>
+                            <a href="#" class="social-icon" target="_blank"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم من أنا -->
+            <section id="about" class="section">
+                <h2>من أنا</h2>
+                <div class="about-content">
+                    <p>ic_1t</p>
+                </div>
+            </section>
+
+            <!-- قسم المهارات -->
+            <section id="skills" class="section">
+                <h2>المهارات</h2>
+                <div class="skills-container">
+                    <div class="skill">
+                        <div class="skill-name">HTML5</div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-name">CSS3</div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-name">JavaScript</div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-name">React</div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    <div class="skill">
+                        <div class="skill-name">Node.js</div>
+                        <div class="skill-bar">
+                            <div class="skill-level" style="width: 75%"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم المشاريع -->
+            <section id="projects" class="section">
+                <h2>المشاريع</h2>
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-image"></div>
+                        <h3>مشروع 1</h3>
+                        <p>تطوير موقع إلكتروني متكامل لشركة تقنية مع لوحة تحكم متطورة.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image"></div>
+                        <h3>مشروع 2</h3>
+                        <p>تصميم وبرمجة تطبيق ويب تفاعلي باستخدام React و Node.js.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-image"></div>
+                        <h3>مشروع 3</h3>
+                        <p>إنشاء منصة تعليمية إلكترونية مع نظام إدارة محتوى متكامل.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم تواصل معي -->
+            <section id="contact" class="section">
+                <h2>تواصل معي</h2>
+                <div class="contact-form">
+                    <div class="form-group">
+                        <label for="name">الاسم</label>
+                        <input type="text" id="name" placeholder="أدخل اسمك">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني</label>
+                        <input type="email" id="email" placeholder="أدخل بريدك الإلكتروني">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">الرسالة</label>
+                        <textarea id="message" placeholder="أدخل رسالتك هنا"></textarea>
+                    </div>
+                    <button class="submit-btn">إرسال</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // وظائف JavaScript للموقع التعريفي
+        document.addEventListener('DOMContentLoaded', function() {
+            // تحديد العناصر
+            const themeSwitch = document.getElementById('theme-switch');
+            const menuLinks = document.querySelectorAll('.menu a');
+            const sections = document.querySelectorAll('.section');
+            const submitBtn = document.querySelector('.submit-btn');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            // التحقق من وجود تفضيل سابق للوضع الليلي/النهاري
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeSwitch.checked = true;
+            }
+            
+            // وظيفة تبديل الوضع الليلي/النهاري
+            themeSwitch.addEventListener('change', function() {
+                if (this.checked) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+            
+            // وظيفة فتح وإغلاق القائمة الجانبية
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('open');
+                sidebarToggle.classList.toggle('open');
+                overlay.classList.toggle('active');
+                
+                // تغيير أيقونة الزر
+                const icon = sidebarToggle.querySelector('i');
+                if (sidebar.classList.contains('open')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // إغلاق القائمة الجانبية عند النقر على الخلفية المظللة
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('open');
+                sidebarToggle.classList.remove('open');
+                overlay.classList.remove('active');
+                
+                // إعادة أيقونة الزر
+                const icon = sidebarToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+            
+            // وظيفة التنقل بين الأقسام
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // إزالة الفئة النشطة من جميع الروابط
+                    menuLinks.forEach(item => item.classList.remove('active'));
+                    
+                    // إضافة الفئة النشطة للرابط المحدد
+                    this.classList.add('active');
+                    
+                    // الحصول على معرف القسم المستهدف
+                    const targetId = this.getAttribute('href').substring(1);
+                    
+                    // إخفاء جميع الأقسام
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // إظهار القسم المستهدف
+                    document.getElementById(targetId).classList.add('active');
+                    
+                    // إغلاق القائمة الجانبية بعد النقر على رابط (للشاشات الصغيرة)
+                    sidebar.classList.remove('open');
+                    sidebarToggle.classList.remove('open');
+                    overlay.classList.remove('active');
+                    
+                    // إعادة أيقونة الزر
+                    const icon = sidebarToggle.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                    
+                    // التمرير إلى أعلى الصفحة
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            // محاكاة إرسال نموذج الاتصال
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const nameInput = document.getElementById('name');
+                    const emailInput = document.getElementById('email');
+                    const messageInput = document.getElementById('message');
+                    
+                    // التحقق من إدخال البيانات
+                    if (nameInput.value && emailInput.value && messageInput.value) {
+                        // إظهار رسالة نجاح
+                        alert('تم إرسال رسالتك بنجاح!');
+                        
+                        // إعادة تعيين النموذج
+                        nameInput.value = '';
+                        emailInput.value = '';
+                        messageInput.value = '';
+                    } else {
+                        // إظهار رسالة خطأ
+                        alert('يرجى ملء جميع الحقول المطلوبة');
+                    }
+                });
+            }
+            
+            // إضافة تأثيرات حركة للصورة الشخصية
+            const profileImage = document.querySelector('.profile-image-container');
+            if (profileImage) {
+                profileImage.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+                
+                profileImage.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            }
+            
+            // تحميل أيقونات التواصل الاجتماعي بتأثير متتابع
+            const socialIcons = document.querySelectorAll('.social-icon');
+            socialIcons.forEach((icon, index) => {
+                setTimeout(() => {
+                    icon.style.opacity = '1';
+                    icon.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+            
+            // تعيين القسم الافتراضي (الرئيسية)
+            document.getElementById('home').classList.add('active');
+            document.querySelector('.menu a[href="#home"]').classList.add('active');
+        });
+    </script>
+</body>
+</html>
